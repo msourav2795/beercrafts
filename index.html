@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <style>
+      .navbar-inverse{
+        background: none;
+      }
+      .navbar-inverse div div a{
+        font-size: 30px;
+        text-decoration: bold;
+      }
+      .row_padding{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border: 1px solid white;
+      }
+      .row_padding div{
+        color:white;
+      }
+      .row div{
+
+      }
+      .row_header div a{
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .row_hover:hover{
+        margin-left: 0.2px;
+      }
+      table{
+        border: 1px solid white;
+      }
+      .spinner{
+        height:75vh;
+        background:url("spin.gif");
+        background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+        z-index: 10000;
+      }
+      .cart_arrow{
+        position:fixed;
+        bottom:60px;
+        right:20px;
+        height:50px;width:50px;
+        background='background.png';
+        z-index=1000;
+      }
+      .toast{
+        position:fixed;
+        bottom:20px;
+        right:100px;
+        width:140px;
+        background-color:white;
+        z-index=1000;
+        color:black;
+        text-align: center;
+        border-radius: 10px;
+        font-size: 20px;
+        text-decoration: bold;
+      }
+      .cart{
+        position:fixed;
+        bottom:10px;
+        right:20px;
+        height:50px;width:50px;
+        background='background.png';
+        z-index=1000;
+        border-radius:25px;
+      }
+    </style>
+  </head>
+  <body background="background.png" style="background-color:black" >
+
+    <div ng-app="myApp" ng-controller="customersCtrl">
+      <nav class="navbar navbar-inverse" >
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar" ></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">LOGO</a>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+              <li class="active"></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <form class="navbar-form navbar-right" action="/action_page.php" style="margin-right:0px">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Find your beer" name="search" ng-model="search_name">
+                    <div class="input-group-btn">
+                      <button class="btn btn-default" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container" ng-init="x.ibu='-1'">
+        <div class="row row_padding row_header" >
+          <div href="#" ng-click="setOrder('abv')" class="col-xs-6 col-sm-1 col-md-1 col-lg-1" >
+            <a href="#">Alcohol Content</a>
+          </div>
+          <div  ng-click="setOrder('ibu')" class="col-xs-6 col-sm-1 col-md-1 col-lg-1" >
+            <a href="#">IBU</a>
+          </div>
+          <div ng-click="setOrder('id')" class="col-xs-4 col-sm-1 col-md-1 col-lg-1" >
+            <a href="#">Unique ID</a>
+          </div>
+          <div ng-click="setOrder('name')" class="col-xs-8 col-sm-4 col-md-4 col-lg-4" >
+            <a href="#">Name</a>
+          </div>
+          <div ng-click="setOrder('style')" class="col-xs-8 col-sm-3 col-md-3 col-lg-3" >
+            <a href="#">Style</a>
+          </div>
+          <div ng-click="setOrder('ounces')" class="col-xs-2 col-sm-1 col-md-1 col-lg-1" >
+            <a href="#">Ounce</a>
+          </div>
+          <div ng-click="setOrder('ounces')" class="col-xs-2 col-sm-1 col-md-1 col-lg-1" >
+            <a>Add</a>
+          </div>
+        </div>
+        <div class="spinner row" ng-show="loading"></div>
+        <div class="row row_padding row_hover" ng-repeat="x in myData |  orderBy: order_type | filter:search_name" >
+          <div ng-if="x.abv==''" class="col-xs-6 col-sm-1 col-md-1 col-lg-1" >
+            &nbsp;
+          </div>
+          <div ng-if="x.abv!=''" class="col-xs-6 col-sm-1 col-md-1 col-lg-1" >
+            {{x.abv}}
+          </div>
+          <div ng-if="x.ibu==''" class="col-xs-6 col-sm-1 col-md-1 col-lg-1" >
+            NA
+          </div>
+          <div ng-if="x.ibu!=''" class="col-xs-6 col-sm-1 col-md-1 col-lg-1" >
+          {{x.ibu}}
+          </div>
+          <div class="col-xs-4 col-sm-1 col-md-1 col-lg-1" >
+            {{x.id}}
+          </div>
+          <div class="col-xs-8 col-sm-4 col-md-4 col-lg-4" >
+            {{x.name}}
+          </div>
+          <div class="col-xs-8 col-sm-3 col-md-3 col-lg-3" >
+            {{x.style}}
+          </div>
+          <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1" >
+            {{x.ounces}}
+          </div>
+          <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1" >
+            <a href="#" ng-click="addToCart(x)" class="glyphicon glyphicon-plus" style="font-size:15px;color:green;text-decoration:none"></a>
+          </div>
+        </div>
+      </div>
+      <div ng-switch="visibility">
+        <div class="cart_arrow" ng-switch-when="true">
+          <a href="#" class="glyphicon glyphicon-arrow-down" style="margin-top:7px;margin-left:7px;font-size:35px;color:white;text-decoration:none"></a>
+        </div>
+        <div class="toast" ng-switch-when="true">
+          Added to cart
+        </div>
+        <div class="toast" ng-switch-when="present">
+          Already added
+        </div>
+      </div>
+      <div class="cart" style="">
+        <a href="#" class="glyphicon glyphicon-shopping-cart" style="margin-top:7px;margin-left:7px;font-size:35px;color:white;text-decoration:none"></a>
+      </div>
+    </div>
+    <script>
+      var app = angular.module('myApp', []);
+      app.controller('customersCtrl', function($scope, $http,$timeout) {
+        $http.get("beercrafts.json").then(function (response) {
+          $scope.myData = response.data;
+        }).finally(function() {
+          $scope.loading = false;
+        });
+        $scope.items=[];
+        $scope.visibility="false";
+        $scope.loading="true";
+        $scope.setOrder = function(propertyName) {
+          $scope.loading="true";
+          $timeout(function () {
+            $scope.loading = false;
+          }, 1000);
+          if ($scope.order_type === propertyName) {
+            $scope.order_type = '-' + propertyName;
+          }
+          else if ($scope.order_type === '-' + propertyName) {
+            $scope.order_type = propertyName;
+          }
+           else {
+             $scope.order_type = propertyName;
+           }
+         };
+         $scope.addToCart=function(item_object){
+           if($scope.items.indexOf(item_object)!=-1){
+             $scope.visibility="present";
+             $timeout(function () {
+               $scope.visibility= "false?";
+             }, 1500);
+           }
+           if($scope.items.indexOf(item_object)==-1){
+       	 	   $scope.items.push(item_object);
+             $scope.visibility="true";
+             $timeout(function () {
+               $scope.visibility= "false?";
+             }, 1500);
+           }
+         };
+      });
+    </script>
+  </body>
+</html>
