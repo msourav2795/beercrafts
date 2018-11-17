@@ -15,6 +15,14 @@
         font-size: 30px;
         text-decoration: bold;
       }
+	  @media screen and (min-width: 768px) {
+		div ul li{
+			width:350px;
+		}
+		div ul li form div{
+			width:311px;
+		}
+	  }
       .row_padding{
         padding-top: 15px;
         padding-bottom: 15px;
@@ -76,7 +84,7 @@
       }
     </style>
   </head>
-  <body background="background.png" style="background-color:black" >
+  <body background="" style="background-color:black;background: linear-gradient(rgba(0, 0, 0,.5), rgba(0, 0, 0,.99)), url('background.png');background-attachment: fixed;background-repeat: no-repeat;background-size: cover;background-position: center top" >
 
     <div ng-app="myApp" ng-controller="customersCtrl">
       <nav class="navbar navbar-inverse" >
@@ -87,7 +95,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">LOGO</a>
+            <a class="navbar-brand" href="#">Know Beer</a>
           </div>
           <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
@@ -183,7 +191,7 @@
     <script>
       var app = angular.module('myApp', []);
       app.controller('customersCtrl', function($scope, $http,$timeout) {
-        $http.get("beercrafts.json").then(function (response) {
+        $http.get("https://msourav2795.github.io/beercrafts/beercrafts.json").then(function (response) {
           $scope.myData = response.data;
         }).finally(function() {
           $scope.loading = false;
